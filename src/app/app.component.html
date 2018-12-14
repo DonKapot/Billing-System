@@ -1,0 +1,135 @@
+
+<div class="container-fluid" style="text-align: center;">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<p class="text-white-50 bg-dark">Payment acquireing</p>
+			<div class="card text-white bg-secondary mb-3">
+			  <div class="card-header"><h1>Совершенные транзакции</h1></div>
+			  <div class="card-body">
+			    <h5 class="card-title">...</h5>
+					<table class="table table-hover table-dark">
+<!-- 						<caption>
+							<ngb-pagination [collectionSize]="transactionsLength" [(page)]="pageTransaction" [boundaryLinks]="true"></ngb-pagination>
+						</caption> -->
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Имя Клиента</th>
+					      <th scope="col">Название услуги</th>
+					      <!-- <th scope="col">Сумма оплаты</th> -->
+					      <th scope="col">Дата Оплаты</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr *ngFor="let transaction of transactions" style="cursor: pointer;">
+					      <th scope="row">{{transaction.id}}</th>
+					      <td>{{getClientById(transaction.clientId).name}}</td>
+					      <td>{{getServiceById(transaction.servId).name}}</td>
+					      <!-- <td>{{getServiceById(transaction.servId).price}}</td> -->
+					      <td>{{transaction.date}}</td>
+					    </tr>
+					  </tbody>
+					</table>
+			  </div>
+			</div>
+		</div>
+	</div>	
+	<!-- /row -->
+<!--Совершенные тразакции-->
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card text-white bg-dark mb-3">
+			  <div class="card-header"><h2>Клиенты</h2></div>
+				<div class="card-body list-clients">
+
+					<table class="table table-hover table-dark">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Имя Клиента</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr *ngFor="let client of clients | unique; let i = index" style="cursor: pointer;" (click)="openClientModal(content, client)">
+					      <th scope="row">{{i+1}}</th>
+					      <td>{{client.name}}</td>
+					    </tr>
+					  </tbody>
+					</table>
+<!--Modal-->
+					<ng-template #content let-c="close" let-d="dismiss">
+					  <div class="modal-header">
+					    <h4 class="modal-title">
+					    	<span class="badge badge-secondary">Имя Клиента: {{currentClient.name}}</span> 
+					    	|  
+					    	<span class="badge badge-secondary"> Депозит: {{currentClient.deposit | currency:'RUB':'symbol':'1.1-1'}}</span>
+					    </h4>
+					        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+							      <span aria-hidden="true">&times;</span>
+							    </button>
+					  </div>
+					  <div class="modal-body">
+
+							<table class="table table-hover table-Secondary">
+						  	<caption>Услуги к оплате</caption>	
+							  <thead>
+							    <tr>
+							      <th scope="col">#</th>
+							      <th scope="col">Название Услуги</th>
+							      <th scope="col">Цена Услуги</th>
+							      <th scope="col">Услуга плачена</th>
+							      <th scope="col">Оплатить</th>
+							    </tr>
+							  </thead>
+							  <tbody>						  
+							    <tr *ngFor="let cli of currentClients; let i = index" style="cursor: pointer;" 
+							    [ngClass]="{'bg-success': cli.servComplete, 'table-info': cli.toggleRow && !cli.servComplete}"
+							    (click)="changeDepositTemp(cli)"> 
+							      <th scope="row">{{i+1}}</th>
+							      <td>{{getServiceById(cli.servId).name}}</td>
+		
+						      <td>
+							      		{{cli.servicePrice | number:'1.1-1'}} RUB
+							      	<span style="font-style: italic; font-size: 16px; color: green;" *ngIf="cli.tempCredit>0 && !cli.servComplete && cli.toggleRow">
+							      	  - {{cli.tempCredit | number:'1.1-1'}} RUB
+							        </span>
+							      </td>
+							      <td>{{ cli.servComplete ? "Да" : "Ждет оплаты" }}</td>
+							      <td>
+							      	<input *ngIf="!cli.servComplete" class="form-check-input" type="checkbox" [checked]="cli.toggleRow" disabled="true">
+							      </td>
+							    </tr>
+							  </tbody>
+							</table>
+					  </div>
+					   <div class="modal-footer">
+					    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Оплатить</button>
+					  </div>
+					</ng-template>
+<!--/Modal-->
+				</div>
+			</div>
+		</div>
+<!-- /col -->
+<!-- 		<div class="col-md-6">
+			<section>
+				<ngb-tabset>
+				  <ngb-tab title="Добавить клиента">
+				    <ng-template ngbTabContent>
+				      <p>These tabs are displayed as pills...</p>
+				    </ng-template>
+				  </ngb-tab>
+				  <ngb-tab title="Добавить услугу">
+				    <ng-template ngbTabContent>
+				      <p>Because default values have been customized.</p>
+				    </ng-template>
+				  </ngb-tab>
+				</ngb-tabset>
+			</section>
+		</div> -->
+<!-- /col -->
+	</div>
+<!-- /row -->
+</div>
+
